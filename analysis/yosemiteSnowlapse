@@ -9,6 +9,17 @@ Map.addLayer(yosemitePark.style(outline), {}, 'yosemitePark');
 /////////////////////////////////////////////////////
 ////////// Create Snow Cover Time Lapse  ////////////
 /////////////////////////////////////////////////////
+// Import yosemite national park shapefile and add to map // 
+// shapefile source: (https://catalog.data.gov/dataset/yosemite-national-park-tract-and-boundary-data-c453b)
+
+// Center map on yosemite boundary
+Map.centerObject(yosemitePark, 8);
+var outline = {fillColor: '00000000', width: 2.0};
+Map.addLayer(yosemitePark.style(outline), {}, 'yosemitePark');
+
+/////////////////////////////////////////////////////
+////////// Create Snow Cover Time Lapse  ////////////
+/////////////////////////////////////////////////////
 
 // Define the time range and initialize an empty list to hold yearly data
 var startYear = 2000;
@@ -40,11 +51,10 @@ var snowCoverImages = ee.ImageCollection.fromImages(
 Export.video.toDrive({
   collection: snowCoverImages,
   description: 'YosemiteSnowCoverTimelapse',
-  dimensions: 720,
-  framesPerSecond: 2,
+  dimensions: 600,
+  framesPerSecond: 3,
   folder: 'yoseSnow_geeData',
-  fileNamePrefix: 'YosemiteSnowTimelapse',
+  fileNamePrefix: 'YosemiteSnowTimelapse6',
   region: yosemitePark.geometry(),
   crs: 'EPSG:3857'
 });
-
