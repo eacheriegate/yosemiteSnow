@@ -26,8 +26,6 @@ var yosemiteArea = ee.Image.pixelArea().reduceRegion({
 // Define the time range and initialize an empty list to hold yearly data
 var startYear = 2000;
 var endYear = 2023;
-
-// Initialize an ee.List to hold all features for export
 var features = ee.List([]);
 
 // Iterate over each year and filter data for the winter months
@@ -39,22 +37,29 @@ for (var year = startYear; year <= endYear; year++) {
                     .filterDate(startDate, endDate)
                     .select('NDSI_Snow_Cover');
 
-  // Calculate the mean snow cover for the winter season
+// Calculate the mean snow cover for the winter season
   var meanSnow = modisData.mean().clip(yosemitePark);
 
-  // Visualization parameters
+// Visualization parameters
   var visParams = {
     min: 0,
     max: 100,
     palette: ['white', 'cyan', 'blue', 'purple']
  };
 
-  // Add the mean snow cover image to the map with a year label
-  Map.addLayer(meanSnow, visParams, 'Snow Cover ' + year);
-  
+// Add the mean snow cover image to the map with a year label
+  Map.addLayer(meanSnow, visParams, 'Snow Cover ' + year, true);
+
+// Assign visual parameters to TIFF for export  
+var visSnow = meanSnow.visualize({
+  min: 0,
+  max: 100,
+  palette: ['white', 'cyan', 'blue', 'purple']
+});
+
 // Export the image for each year
   Export.image.toDrive({
-    image: meanSnow,
+    image: visSnow,
     description: 'SnowCover_' + year,
     folder: 'yoseSnow_geeData',
     fileNamePrefix: 'Snow_Cover_' + year,
@@ -62,7 +67,7 @@ for (var year = startYear; year <= endYear; year++) {
     region: yosemitePark,
     fileFormat: 'GeoTIFF'
   });
-  
+
 // Calculate snow cover area in square kilometers
   var snowCoverArea = meanSnow
                    .multiply(ee.Image.pixelArea())
