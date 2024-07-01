@@ -1,5 +1,6 @@
 library(dplyr)
 library(ggplot2)
+library(extrafont)
 
 # Define directories
 setwd("D:/Emma_C/projects/yosemiteSnow")
@@ -24,11 +25,14 @@ yoseSnowCoverTimeSeries <- ggplot(data = yoseSnowCoverData, aes(x = Year, y = Sn
        y = "Snow Cover Area (km²)") +
   theme(legend.position = "none",  # Removing legend as it's unnecessary for a single variable plot
         panel.border = element_rect(color = "black", linewidth = 1, fill = NA),
-        axis.title.x = element_text(margin = margin(t = 10)),
-        axis.title.y = element_text(margin = margin(r = 10)))
+        axis.title.x = element_text(size = 14, margin = margin(t = 10)),
+        axis.title.y = element_text(size = 14, margin = margin(r = 10)),
+        axis.text.x = element_text(size = 11), 
+        axis.text.y = element_text(size = 11),  
+        plot.title = element_text(size = 18, hjust = 0.5),
+        text = element_text(family = "Times New Roman"))
 
 # Visualize
 yoseSnowCoverTimeSeries
 
-ggsave("D:/Emma_C/projects/swi_gf/data/data_finalized/yoseSnowtimeseries.png", yoseSnowCoverTimeSeries, width = 9, height = 5, dpi = 800)
-
+ggsave("D:/Emma_C/projects/yosemiteSnow/data/data_finalized/results/yoseSnow_timeseries.png", yoseSnowCoverTimeSeries, width = 9, height = 5, dpi = 800)
